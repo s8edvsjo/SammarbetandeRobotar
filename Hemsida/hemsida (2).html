@@ -2,7 +2,7 @@
 <html>
    <head>
       <meta charset="utf-8">
-      <title>mqtt-demo: A simple web application that can subscribe to topics from an MQTT broker over websockets</title>
+      <title>Lit Website for Selfdriving Cars</title>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
       <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
       <link rel="stylesheet" type="text/css" media="screen" href="style2.css" />          <!--refererar till stylesheetet för hemsidan -->
@@ -13,7 +13,7 @@
             
                 //Sätter värdet för variablerna host och port
                 host = "maqiatto.com";
-                port = "8883";
+                port = "1883";
                 
                 // Print output for the user in the messages div
                 document.getElementById("messages").innerHTML += '<span>Connecting to: ' + host + ' on port: ' + port + '</span><br/>';
@@ -24,20 +24,19 @@
                 client.onConnectionLost = onConnectionLost;
                 client.onMessageArrived = onMessageArrived;
                 
-                client.connect({userName : "filip.cederblad@abbindustrigymnasium.se",password : "heykidgofuckaduck",
+                client.connect({userName : "victor.fagerstrom@abbindustrigymnasium.se",password : "hejhej",
                     onSuccess: onConnect,
                     onFailure: onFail,
-                               });
-
+                });
             }
             function onFail() {
                 document.getElementById("messages").innerHTML += '<span>ERROR: Connection to: ' + host + ' on port: ' + port + ' failed.</span><br/>'
 
             }  
             // definierar de olika topic som vi ska använda
-           let topic1="filip.cederblad@abbindustrigymnasium.se/bil";
-           let topic2="filip.cederblad@abbindustrigymnasium.se/bil1";
-           let topic3="filip.cederblad@abbindustrigymnasium.se/send";
+           let topic1="victor.fagerstrom@abbindustrigymnasium.se/Hinder";
+           let topic2="victor.fagerstrom@abbindustrigymnasium.se/karta";
+           let topic3="victor.fagerstrom@abbindustrigymnasium.se/POS";
             // Called when the client connects
             function onConnect() {
                
@@ -138,44 +137,20 @@
                     client.send(message);
   
                     BVelocity = document.getElementById("velocity").value
-                    
-
-
             }
-
-
-
-  
-
-</script>
-            
-
-
-
-
-
-            
-            
+</script>    
     </head>
    <body>
       <!--Skapar interface för hemsidan med alla olika objekt som finns med. 
         Objekten har olika klasser som används för att styla dom i stylesheetet  -->
     <div class="wrapper">
-         <h1>Big car controller </h1>
+         <h1>Random Path Cars</h1>
    
             <div class = "velocitybox">
             <br>   
-            <b>Velocity:</b>
-            <input class = "inputvelocity"id="velocity" type="text" name="velocity" value="60">
-            <input  class = "setvelocity"type="button" onclick="v()" value="Set velocity">
-            </div>
-            <div class = "showvelocity12">
-                <b>Filip:</b>  
-                <div class = "showvelocity1"id="showvelocity1"></div>
-            </div>
-            <div class = "showvelocity22">
-                <b>Jenny:</b>  
-                <div class = "showvelocity2"id="showvelocity2"></div>
+            <b>Size</b>
+            <input class = "inputvelocity"id="velocity" type="text" name="velocity" value="x, y">
+            <input  class = "setvelocity"type="button" onclick="v()" value="Set Size">
             </div>
         <input  class = "button2" type="button" onclick="startCar()" value="Start Car">
         <input  class = "button3" type="button" onclick="stopCar()" value="Stop Car"><br><br>
