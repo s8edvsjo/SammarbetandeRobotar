@@ -1,17 +1,67 @@
 #Intellektuell egendom av David Mörck 
-
+import time
 import random
 import PIL
 from PIL import Image, ImageTk
 import PIL.Image
 from tkinter import * 
 from tkinter.ttk import *
+from paho.mqtt import client as paho
 maps = []
 mapsL = []
-SIZE = [5,5]
+SIZE = [7,7]
 carpos = [4,2] #sätt in startpositionen
 lego = [1,0] #skickas in av bilen
 point = 0 #mellan 0 och 3
+
+broker = 'maqiatto.com'
+port = 1883
+topic = "victor.fagerstrom@abbindustrigymnasium.se/karta"
+# generate client ID with pub prefix randomly
+client_id = "Jenny"
+
+def connect_mqtt():
+    def on_connect(client, userdata, flags, rc):
+        if rc == 0:
+            print("Connected to MQTT Broker!")
+        else:
+            print("Failed to connect, return code %d\n", rc)
+
+    client = paho.Client(client_id)
+    client.username_pw_set(username="victor.fagerstrom@abbindustrigymnasium.se",password="hejhej")
+    client.on_connect = on_connect
+    client.connect(broker, port)
+    return client
+
+def publish(client):
+    msg_count = 0
+    while True:
+        time.sleep(1)
+        msg = f"messages: {msg_count}"
+        result = client.publish(topic, msg)
+        # result: [0, 1]
+        status = result[0]
+        if status == 0:
+            print(f"Send `{msg}` to topic `{topic}`")
+        else:
+            print(f"Failed to send message to topic {topic}")
+        msg_count += 1
+
+def subscribe(client: paho):
+    def on_message(client, userdata, msg):
+        print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
+
+    client.subscribe(topic)
+    client.on_message = on_message
+
+def run():
+    client = connect_mqtt()
+    subscribe(client)
+    client.loop_forever()
+    #publish(client)
+    
+
+run()
 
 def navigate():
     start=0
@@ -192,6 +242,7 @@ def turn(lr):
             point = point + 1
     return point
 
+connect_mqtt()
 generate_map(SIZE)
 
 print(point)
