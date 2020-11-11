@@ -63,13 +63,13 @@ body {
     margin-bottom: 20px
 }
 
-.setvelocity{
+.setSize{
     background-color: white ;
     color: black;
     border: none;
 }
 
-.inputvelocity{
+.inputSize{
     width: 60px;
     margin-bottom: 20px;
 }
