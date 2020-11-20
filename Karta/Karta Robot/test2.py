@@ -267,7 +267,8 @@ def drawMap():
             img[i][q] = Label(image=render[i][q])
             img[i][q].grid(row = q, column = i,pady = 0)
         q +=1
-    mainloop()
+    master.after(3000, lambda: master.destroy()) # Destroy the widget after 30 seconds
+    master.mainloop()
 
 def run():
     client = connect_mqtt()
@@ -295,4 +296,4 @@ run()
 # drive([2,1])
 # print(point)
 # print(carpos)
-   
+#             fp = open("./bilder/"+num+".jpg","rb") 
