@@ -7,6 +7,9 @@ topic = "victor.fagerstrom@abbindustrigymnasium.se/karta"
 # generate client ID with pub prefix randomly
 client_id = "Jenny"
 
+def test(el):
+    print(el)
+
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
         if rc == 0:
@@ -37,6 +40,7 @@ def publish(client):
 def subscribe(client: paho):
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
+        test(msg.payload.decode())
 
     client.subscribe(topic)
     client.on_message = on_message

@@ -47,21 +47,7 @@ def publish(client):
             print(f"Failed to send message to topic {topic}")
         msg_count += 1
 
-def subscribe(client: paho):
-    def on_message(client, userdata, msg):
-        print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
 
-    client.subscribe(topic)
-    client.on_message = on_message
-
-def run():
-    client = connect_mqtt()
-    subscribe(client)
-    client.loop_forever()
-    #publish(client)
-    
-
-run()
 
 def navigate():
     start=0
@@ -195,6 +181,7 @@ def drive(piece):
         move(choice)
         turn(0)
         print("Sväng vänster")
+    drawMap()
     return choice
 
 def move(dir):
@@ -245,46 +232,68 @@ def turn(lr):
 connect_mqtt()
 generate_map(SIZE)
 
-print(point)
-print(carpos)
 
-drive([1,0])
-print(point)
-print(carpos)
+def subscribe(client: paho):
+    def on_message(client, userdata, msg):
+        print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
+        bit = [int(msg.payload.decode()[1]),int(msg.payload.decode()[-2])]
+        drive(bit)
 
-drive([3,0])
-print(point)
-print(carpos)
+    client.subscribe(topic)
+    client.on_message = on_message
 
-drive([4,3])
-print(point)
-print(carpos)
 
-drive([2,1])
-print(point)
-print(carpos)
-   
-master = Tk() 
-master.geometry("520x520")
-size = 60,60
-img  = {}
-load = {}
-render = {}
-q=0
-for x in range(0,11):
-    img[x] = {}
-    load[x] = {}
-    render[x] = {}
-for a in maps:
-    print(a)
-    for i in range(0,len(maps)):
-        num = str(a[i]).replace(" ","").replace("[","").replace("]","")
-        print(num)
-        fp = open("./bilder/"+num+".jpg","rb")
-        load[i][q] = PIL.Image.open(fp)
-        load[i][q].thumbnail(size, PIL.Image.ANTIALIAS)
-        render[i][q] = ImageTk.PhotoImage(load[i][q])
-        img[i][q] = Label(image=render[i][q])
-        img[i][q].grid(row = q, column = i,pady = 0)
-    q +=1
-mainloop() 
+def drawMap():
+    master = Tk() 
+    master.geometry("520x520")
+    size = 60,60
+    img  = {}
+    load = {}
+    render = {}
+    q=0
+    for x in range(0,11):
+        img[x] = {}
+        load[x] = {}
+        render[x] = {}
+    for a in maps:
+        print(a)
+        for i in range(0,len(maps)):
+            num = str(a[i]).replace(" ","").replace("[","").replace("]","")
+            print(num)
+            fp = open("./bilder/"+num+".jpg","rb")
+            load[i][q] = PIL.Image.open(fp)
+            load[i][q].thumbnail(size, PIL.Image.ANTIALIAS)
+            render[i][q] = ImageTk.PhotoImage(load[i][q])
+            img[i][q] = Label(image=render[i][q])
+            img[i][q].grid(row = q, column = i,pady = 0)
+        q +=1
+    master.after(3000, lambda: master.destroy()) # Destroy the widget after 30 seconds
+    master.mainloop()
+
+def run():
+    client = connect_mqtt()
+    subscribe(client)
+    #publish(client)
+    client.loop_forever()
+
+run()
+
+# print(point)
+# print(carpos)
+
+# drive([1,0])
+# print(point)
+# print(carpos)
+
+# drive([3,0])
+# print(point)
+# print(carpos)
+
+# drive([4,3])
+# print(point)
+# print(carpos)
+
+# drive([2,1])
+# print(point)
+# print(carpos)
+#             fp = open("./bilder/"+num+".jpg","rb") 
