@@ -51,6 +51,7 @@ void setup() {
   pinMode(DO_RLed, OUTPUT);
   pinMode(DO_GLed, OUTPUT);
   Stearing.attach(15); //D8 Servo
+  Stearing.write(93);
   attachInterrupt(digitalPinToInterrupt(Hallgivare), HtoL, FALLING); // Interupt 
   digitalWrite(DO_RLed, HIGH);
   delay(2000);
