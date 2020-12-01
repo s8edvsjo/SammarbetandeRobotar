@@ -34,9 +34,15 @@
 
             }  
             // definierar de olika topic som vi ska använda
+<<<<<<< Updated upstream
            let topic1="victor.fagerstrom@abbindustrigymnasium.se/Hinder";
            let topic2="victor.fagerstrom@abbindustrigymnasium.se/karta";
            let topic3="victor.fagerstrom@abbindustrigymnasium.se/POS";
+=======
+           let topic1="victor.fagerstrom@abbindustrigymnasium.se/scout";
+           let topic2="victor.fagerstrom@abbindustrigymnasium.se/klo";
+           let topic3="victor.fagerstrom@abbindustrigymnasium.se/send";
+>>>>>>> Stashed changes
             // Called when the client connects
             function onConnect() {
                
@@ -55,7 +61,7 @@
                  
                  client.subscribe(topic2);
                   
-                  client.subscribe(topic3);
+                 client.subscribe(topic3);
             // Skickar meddelandet connected till topic3
             message= new Paho.MQTT.Message("connected");
                 message.destinationName=topic3;
