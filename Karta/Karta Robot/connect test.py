@@ -3,7 +3,7 @@ from paho.mqtt import client as paho
 
 broker = 'maqiatto.com'
 port = 1883
-topic = "victor.fagerstrom@abbindustrigymnasium.se/karta"
+topic = "victor.fagerstrom@abbindustrigymnasium.se/Hinder"
 # generate client ID with pub prefix randomly
 client_id = "Jenny"
 
@@ -48,8 +48,9 @@ def subscribe(client: paho):
 def run():
     client = connect_mqtt()
     subscribe(client)
+    publish(client)
     client.loop_forever()
-    #publish(client)
+
     
 
 run()

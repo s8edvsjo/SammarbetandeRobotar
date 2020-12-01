@@ -13,13 +13,13 @@ SIZE = [7,7]
 carpos = [4,2] #sätt in startpositionen
 lego = [1,0] #skickas in av bilen
 point = 0 #mellan 0 och 3
-msg_count = 0
-msg = ""
+message="hej"
+msg_count = 1
 
 broker = 'maqiatto.com'
 port = 1883
 topic = "victor.fagerstrom@abbindustrigymnasium.se/karta"
-topic2 = "victor.fagerstrom@abbindustrigymnasium.se/Hinder"
+topic2 = "victor.fagerstrom@abbindustrigymnasium.se/DIR"
 # generate client ID with pub prefix randomly
 client_id = "Jenny"
 
@@ -35,7 +35,6 @@ def connect_mqtt():
     client.on_connect = on_connect
     client.connect(broker, port)
     return client
-
 
 def navigate():
     start=0
@@ -93,6 +92,7 @@ def navigate():
 #                 mapsL[c+1].extend((0,0,1))
 #                 mapsL[c+2].extend((1,0,1))
 #         c=c+3
+
 def generate_map(size):
     for a in range(0,size[0]):
         maps.append([])
@@ -107,7 +107,7 @@ def drive(piece):
     global carpos
     global point
     global maps
-    global msg
+    global message
 
     if piece[0] == 1: #om lego-vägen är väg 1 spelar rotationen ingen roll
         maps[carpos[0]][carpos[1]] = piece
@@ -161,21 +161,20 @@ def drive(piece):
     choice= alt[rand] 
     if choice == 0:
         print("Åk rakt på")
-        msg = "R"
+        message = "R"
         move(choice) #kallar på funktionen move som flyttar på bilen i kartan
     elif choice == 1:
         move(choice)
         turn(1)
         print("Sväng höger")
-        msg = "H"
+        message = "H"
     elif choice == 3:
         move(choice)
         turn(0)
         print("Sväng vänster")
-        msg = "V"
+        message = "V"
     drawMap()
     return choice
-
 
 def move(dir):
     global point
@@ -225,29 +224,35 @@ def turn(lr):
 connect_mqtt()
 generate_map(SIZE)
 
-
-
+def publish(client):
+    global message
+    global msg_count
+    msg_count = 0
+    while msg_count == 0:
+        time.sleep(1)
+        msg = f"{message}"
+        result = client.publish(topic2, msg)
+        # result: [0, 1]
+        status = result[0]
+        msg_count = 1
+        if status == 0:
+            print(f"Send `{msg}` to topic `{topic2}`")
+        else:
+            print(f"Failed to send message to topic {topic2}")
+        
 def subscribe(client: paho):
     def on_message(client, userdata, msg):
+        global msg_count
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
         bit = [int(msg.payload.decode()[1]),int(msg.payload.decode()[-2])]
         drive(bit)
+        msg_count = 0
+        msg = f"{message}"
+        result = client.publish(topic2, msg)
+        status = result[0]
 
     client.subscribe(topic)
     client.on_message = on_message
-
-
-def publish(client):
-    while True:
-        time.sleep(1)
-        result = client.publish(topic, msg)
-        # result: [0, 1]
-        status = result[0]
-        if status == 0:
-            print(f"Send `{msg}` to topic `{topic}`")
-        else:
-            print(f"Failed to send message to topic {topic}")
-
 
 def drawMap():
     master = Tk() 
@@ -277,10 +282,10 @@ def drawMap():
     master.mainloop()
  
 def run():
+    global msg_count
     client = connect_mqtt()
-    publish(client)
     subscribe(client)
-    client.loop()
+    client.loop_forever()
 
 run()
 
