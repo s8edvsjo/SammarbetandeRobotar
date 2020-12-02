@@ -13,7 +13,7 @@ SIZE = [7,7]
 carpos = [4,2] #sätt in startpositionen
 lego = [1,0] #skickas in av bilen
 point = 0 #mellan 0 och 3
-message="hej"
+message=""
 msg_count = 1
 
 broker = 'maqiatto.com'
@@ -278,7 +278,7 @@ def drawMap():
             img[i][q] = Label(image=render[i][q])
             img[i][q].grid(row = q, column = i,pady = 0)
         q +=1
-    master.after(3000, lambda: master.destroy()) # Destroy the widget after 30 seconds
+    master.after(1500, lambda: master.destroy()) # Destroy the widget after 30 seconds
     master.mainloop()
  
 def run():
