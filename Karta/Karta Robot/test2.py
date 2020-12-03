@@ -278,7 +278,7 @@ def drawMap():
             img[i][q] = Label(image=render[i][q])
             img[i][q].grid(row = q, column = i,pady = 0)
         q +=1
-    master.after(1500, lambda: master.destroy()) # Destroy the widget after 30 seconds
+    master.after(100, lambda: master.destroy()) # Destroy the widget after 30 seconds
     master.mainloop()
  
 def run():
